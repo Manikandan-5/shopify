@@ -54,9 +54,9 @@ const Login = () => {
           <div className="card shadow-sm">
             <div className="card-body">
               <h2 className="card-title text-center fw-bold">
-              <i class="bi bi-buildings"></i>
-                BSS Pvt Ltd</h2>
-                <h5 className="text-center">Hii, Welcome back <i class="bi bi-person-raised-hand"></i></h5>
+              <i className="bi bi-buildings"></i> 
+                 &nbsp; BSS Pvt Ltd</h2>
+                <h5 className="text-center">Hii, Welcome back <i className="bi bi-person-raised-hand"></i></h5>
               <form onSubmit={handleLogin}>
                 <div className="mb-3">
                   <label htmlFor="userName" className="form-label">

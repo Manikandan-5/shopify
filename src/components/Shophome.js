@@ -6,44 +6,51 @@ const Shophome = () => {
   const [items, setItems] = useState([]);
   const [images, setImages] = useState({}); 
   //  token from local storage
-  const token = localStorage.getItem('authToken'); 
+   const token = localStorage.getItem('authToken'); // Fetch token once
 
   useEffect(() => {
     const fetchItems = async () => {
+      if (!token) {
+        console.error('Token not found!');
+        return;
+      }
+
       try {
         const response = await axios.get(
           'http://beta.hrmetrics.mv/interview/api/Item/GetItems',
-          {   headers: {
-            // used token in authorization
-              Authorization: `Bearer ${token}`, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }
         );
+
         setItems(response.data);
         console.log(response.data);
-        
-        // get the id and images
+
+        // Get the id and images
         const imagePromises = response.data.map(async (item) => {
           const imageUrl = await fetchImageUrl(item.ImagePath);
           return { id: item.Id, imageUrl };
         });
 
-        // promise constructor
+        // Preload all images
         const preloadedImages = await Promise.all(imagePromises);
         const imageMap = preloadedImages.reduce((acc, img) => {
           acc[img.id] = img.imageUrl;
           return acc;
         }, {});
-// Store preloaded image URLs
-        setImages(imageMap); 
+
+        // Store preloaded image URLs
+        setImages(imageMap);
       } catch (error) {
         console.error('There was an error fetching the items!', error);
       }
     };
 
     fetchItems();
-  }, [token]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
   const fetchImageUrl = async (imagePath) => {
     try {
       const response = await axios.get(
